@@ -1,4 +1,5 @@
 import logging
+from typing import Callable
 
 from fastapi import FastAPI, status
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -7,7 +8,7 @@ from starlette.responses import JSONResponse
 
 from app.config import LOGIN_LOGOUT_SERVICE_HEADER_NAME, LOGIN_LOGOUT_SERVICE_TOKEN
 
-ALLOWED_PATH_WITHOUT_AUTH = ["/docs", "/openapi.json", "/health"]
+ALLOWED_PATH_WITHOUT_AUTH = ["/docs", "/openapi.json", "/health", "/metrics"]
 
 
 logger = logging.getLogger(__name__)
@@ -17,7 +18,7 @@ class AuthValidationMiddleware(BaseHTTPMiddleware):
     def __init__(self, app: FastAPI):
         super().__init__(app)
 
-    async def dispatch(self, request: Request, call_next: callable):
+    async def dispatch(self, request: Request, call_next: Callable):
         logger.debug(
             "Got request: method=%s, url=%s, headers=%s",
             request.method,
